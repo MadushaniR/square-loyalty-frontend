@@ -1,0 +1,33 @@
+.help-page {
+  padding: 2rem;
+  color: #333;
+  font-family: 'Segoe UI', sans-serif;
+
+  h2 {
+    color: #2b898c;
+    margin-bottom: 1.5rem;
+  }
+
+  .help-section {
+    margin-bottom: 1.5rem;
+
+    h3 {
+      color: #2b898c;
+      margin-bottom: 0.5rem;
+    }
+
+    p {
+      line-height: 1.6;
+      font-size: 1rem;
+    }
+
+    a {
+      color: #2b898c;
+      text-decoration: underline;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+}

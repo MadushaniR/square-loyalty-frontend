@@ -9,6 +9,7 @@ function App() {
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
 
   const [totalPoints, setTotalPoints] = useState(0);
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
 
   useEffect(() => {
     const handleResize = () => {
@@ -19,8 +20,6 @@ function App() {
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
-
-  console.log('App totalPoints:', totalPoints);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
   const closeSidebar = () => isMobile && setSidebarOpen(false);
@@ -36,7 +35,15 @@ function App() {
       />
       {sidebarOpen && isMobile && <div className="backdrop" onClick={closeSidebar} />}
       <main className={`main-content ${sidebarOpen && !isMobile ? 'with-sidebar' : ''}`}>
-        <Outlet context={{ isSidebarOpen: sidebarOpen, setTotalPoints }} />
+        <Outlet
+          context={{
+            isSidebarOpen: sidebarOpen,
+            setTotalPoints,
+            totalPoints, 
+            purchaseHistory, 
+            setPurchaseHistory, 
+          }}
+        />
       </main>
     </>
   );
