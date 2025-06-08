@@ -11,7 +11,12 @@ const items = [
 ];
 
 const Home = () => {
-  const { isSidebarOpen, setTotalPoints } = useOutletContext();
+  const {
+    isSidebarOpen,
+    setTotalPoints,
+    purchaseHistory,
+    setPurchaseHistory
+  } = useOutletContext();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [messagePopup, setMessagePopup] = useState(null);
@@ -25,17 +30,22 @@ const Home = () => {
       const success = Math.random() > 0.3;
 
       if (success) {
+        const newEntry = {
+          name: selectedItem.name,
+          price: selectedItem.price,
+          points: selectedItem.points,
+          time: new Date().toLocaleString(),
+        };
+
         setMessagePopup({
           type: 'success',
           text: `You successfully purchased ${selectedItem.name} for Rs. ${selectedItem.price.toFixed(
             2
           )}! You earned ${selectedItem.points} points.`,
         });
-        console.log('Adding points:', selectedItem.points);
-        setTotalPoints((prev) => {
-          console.log('Previous points:', prev);
-          return prev + selectedItem.points;
-        });
+
+        setTotalPoints((prev) => prev + selectedItem.points);
+        setPurchaseHistory((prev) => [...prev, newEntry]);
       } else {
         setMessagePopup({
           type: 'fail',
