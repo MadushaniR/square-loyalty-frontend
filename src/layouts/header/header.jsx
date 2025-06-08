@@ -8,7 +8,7 @@ const Header = ({ toggleSidebar }) => {
     <header className="header">
       <div className="left-section">
         <button className="menu-btn" onClick={toggleSidebar}>☰</button>
-        <span className="logo">My App</span>
+        <span className="logo">Coffee Mart</span>
       </div>
 
       <div className="right-section">
