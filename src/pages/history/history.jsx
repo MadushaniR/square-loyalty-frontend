@@ -1,10 +1,28 @@
 import { useOutletContext } from 'react-router-dom';
+import { DataGrid } from '@mui/x-data-grid';
+import { Box } from '@mui/material';
 import './history.scss';
 
 const History = () => {
   const context = useOutletContext();
   const purchaseHistory = context?.purchaseHistory || [];
   const totalPoints = context?.totalPoints || 0;
+
+  const columns = [
+    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'name', headerName: 'Item', width: 150 },
+    { field: 'price', headerName: 'Price (Rs)', width: 150 },
+    { field: 'points', headerName: 'Points Earned', width: 180 },
+    { field: 'time', headerName: 'Time', width: 180 },
+  ];
+
+  const rows = purchaseHistory.map((item, idx) => ({
+    id: idx + 1,
+    name: item.name,
+    price: item.price.toFixed(2),
+    points: item.points,
+    time: item.time,
+  }));
 
   return (
     <div className="history-page">
@@ -13,26 +31,24 @@ const History = () => {
         <p>No purchases yet.</p>
       ) : (
         <>
-          <table className="history-table">
-            <thead>
-              <tr>
-                <th>Item</th>
-                <th>Price (Rs)</th>
-                <th>Points Earned</th>
-                <th>Time</th>
-              </tr>
-            </thead>
-            <tbody>
-              {purchaseHistory.map((item, idx) => (
-                <tr key={idx}>
-                  <td>{item.name}</td>
-                  <td>{item.price.toFixed(2)}</td>
-                  <td>{item.points}</td>
-                  <td>{item.time}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+          <Box sx={{ height: 400, width: '100%' }}>
+            <DataGrid
+              rows={rows}
+              columns={columns}
+              pageSize={5}
+              rowsPerPageOptions={[5]}
+              disableSelectionOnClick
+              sx={{
+                '& .MuiDataGrid-columnHeaders': {
+                  backgroundColor: '#f0f8f8',
+                  color: '#2b898c',
+                },
+                '& .MuiDataGrid-cell': {
+                  textAlign: 'center',
+                },
+              }}
+            />
+          </Box>
           <div className="total-points">
             <strong>Total Points Earned:</strong> {totalPoints}
           </div>
