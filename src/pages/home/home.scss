@@ -1,110 +1,110 @@
 .home-page {
-  color: #333;
+    color: #333;
 
-  .banner {
-    position: relative;
-    width: 100%;
-    height: 300px;
-    overflow: hidden;
-
-    img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-  }
-
-  .item-section {
-    padding: 2rem;
-
-    h2 {
-      font-size: 1.8rem;
-      margin-bottom: 1.5rem;
-      color: #2b898c;
-      text-align: center;
-    }
-
-    .item-grid {
-      display: grid;
-      gap: 1.5rem;
-      max-width: 100%;
-
-      grid-template-columns: 1fr;
-
-      &.sidebar-open {
-        max-width: 100%;
-      }
-
-      &.sidebar-closed {
-        max-width: 900px;
-        margin-left: auto;
-        margin-right: auto;
-      }
-
-      @media (min-width: 600px) and (max-width: 1023px) {
-        grid-template-columns: repeat(2, minmax(220px, 1fr));
-      }
-
-      @media (min-width: 1024px) {
-        grid-template-columns: repeat(4, minmax(220px, 1fr));
-      }
-
-      .item-card {
-        background: white;
-        border-radius: 10px;
-        box-shadow: 0 2px 8px rgba(51, 160, 163, 0.2);
+    .banner {
+        position: relative;
+        width: 100%;
+        height: 300px;
         overflow: hidden;
-        text-align: center;
-        transition: transform 0.3s;
-
-        &:hover {
-          transform: translateY(-5px);
-          box-shadow: 0 6px 12px rgba(117, 200, 193, 0.4);
-        }
 
         img {
-          width: 100%;
-          height: 140px;
-          object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
-
-        .item-info {
-          padding: 1rem;
-
-          h3 {
-            margin-bottom: 0.3rem;
-            color: #002244;
-          }
-
-          p {
-            font-size: 1.1rem;
-            margin-bottom: 0.2rem;
-            color: #444;
-          }
-
-          span {
-            display: block;
-            color: #75c8c1;
-            font-weight: bold;
-            margin-bottom: 0.8rem;
-          }
-
-          .buy-button {
-            background-color: #33a0a3;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.2rem;
-            border-radius: 20px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: background-color 0.3s;
-
-            &:hover {
-              background-color: #2b898c;
-            }
-          }
-        }
-      }
     }
-  }
+
+    .item-section {
+        padding: 2rem;
+
+        h2 {
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            color: #2b898c;
+            text-align: center;
+        }
+
+        .item-grid {
+            display: grid;
+            gap: 1.5rem;
+            max-width: 100%;
+
+            grid-template-columns: 1fr;
+
+            &.sidebar-open {
+                max-width: 100%;
+            }
+
+            &.sidebar-closed {
+                max-width: 900px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            @media (min-width: 600px) and (max-width: 1023px) {
+                grid-template-columns: repeat(2, minmax(220px, 1fr));
+            }
+
+            @media (min-width: 1024px) {
+                grid-template-columns: repeat(4, minmax(220px, 1fr));
+            }
+
+            .item-card {
+                background: white;
+                border-radius: 10px;
+                box-shadow: 0 2px 8px rgba(51, 160, 163, 0.2);
+                overflow: hidden;
+                text-align: center;
+                transition: transform 0.3s;
+
+                &:hover {
+                    transform: translateY(-5px);
+                    box-shadow: 0 6px 12px rgba(117, 200, 193, 0.4);
+                }
+
+                img {
+                    width: 100%;
+                    height: 140px;
+                    object-fit: cover;
+                }
+
+                .item-info {
+                    padding: 1rem;
+
+                    h3 {
+                        margin-bottom: 0.3rem;
+                        color: #002244;
+                    }
+
+                    p {
+                        font-size: 1.1rem;
+                        margin-bottom: 0.2rem;
+                        color: #444;
+                    }
+
+                    span {
+                        display: block;
+                        color: #75c8c1;
+                        font-weight: bold;
+                        margin-bottom: 0.8rem;
+                    }
+
+                    .buy-button {
+                        background-color: #33a0a3;
+                        color: white;
+                        border: none;
+                        padding: 0.6rem 1.2rem;
+                        border-radius: 20px;
+                        cursor: pointer;
+                        font-weight: bold;
+                        transition: background-color 0.3s;
+
+                        &:hover {
+                            background-color: #2b898c;
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

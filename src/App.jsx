@@ -8,6 +8,8 @@ function App() {
   const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
   const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
 
+  const [totalPoints, setTotalPoints] = useState(0);
+
   useEffect(() => {
     const handleResize = () => {
       const mobile = window.innerWidth <= 768;
@@ -18,16 +20,23 @@ function App() {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
+  console.log('App totalPoints:', totalPoints);
+
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
   const closeSidebar = () => isMobile && setSidebarOpen(false);
 
   return (
     <>
-      <Header toggleSidebar={toggleSidebar} />
-      <Sidebar isOpen={sidebarOpen} isMobile={isMobile} onClose={toggleSidebar} onItemClick={closeSidebar} />
+      <Header toggleSidebar={toggleSidebar} totalPoints={totalPoints} />
+      <Sidebar
+        isOpen={sidebarOpen}
+        isMobile={isMobile}
+        onClose={toggleSidebar}
+        onItemClick={closeSidebar}
+      />
       {sidebarOpen && isMobile && <div className="backdrop" onClick={closeSidebar} />}
       <main className={`main-content ${sidebarOpen && !isMobile ? 'with-sidebar' : ''}`}>
-        <Outlet />
+        <Outlet context={{ isSidebarOpen: sidebarOpen, setTotalPoints }} />
       </main>
     </>
   );

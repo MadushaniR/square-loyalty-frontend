@@ -1,23 +1,25 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
-  MdDashboard,
-  MdPerson,
-  MdSettings,
+  MdHome,
+  MdHistory,
+  MdLoyalty,
 } from 'react-icons/md';
 import './sidebar.scss';
 
-const Sidebar = ({ isOpen, isMobile, onClose, onItemClick }) => {
-  const [activeItem, setActiveItem] = useState('Dashboard');
+const Sidebar = ({ isOpen, isMobile, onClose }) => {
+  const [activeItem, setActiveItem] = useState('Home');
+  const navigate = useNavigate();
 
   const menuItems = [
-    { name: 'Dashboard', icon: <MdDashboard /> },
-    { name: 'Profile', icon: <MdPerson /> },
-    { name: 'Settings', icon: <MdSettings /> },
+    { name: 'Home', path: '/', icon: <MdHome /> },
+    { name: 'History', path: '/history', icon: <MdHistory /> },
+    { name: 'My Points', path: '/points', icon: <MdLoyalty /> }, // Add this route later if needed
   ];
 
-  const handleClick = (itemName) => {
+  const handleClick = (itemName, path) => {
     setActiveItem(itemName);
-    onItemClick(itemName);
+    navigate(path);
     if (isMobile) onClose();
   };
 
@@ -27,11 +29,11 @@ const Sidebar = ({ isOpen, isMobile, onClose, onItemClick }) => {
         <button className="close-btn" onClick={onClose}>×</button>
         <nav>
           <ul>
-            {menuItems.map(({ name, icon }) => (
+            {menuItems.map(({ name, path, icon }) => (
               <li
                 key={name}
                 className={activeItem === name ? 'active' : ''}
-                onClick={() => handleClick(name)}
+                onClick={() => handleClick(name, path)}
               >
                 <span className="icon">{icon}</span>
                 <span className="label">{name}</span>

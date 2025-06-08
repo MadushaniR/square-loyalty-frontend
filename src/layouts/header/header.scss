@@ -28,21 +28,44 @@
       font-size: 1.25rem;
       font-weight: bold;
       color: #333;
+      margin-right: 0.5rem;
     }
   }
 
   .right-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
     position: relative;
+
+    .star-icon {
+      font-size: 1.5rem;
+      color: #f5a623; // gold-ish star color
+      cursor: default;
+    }
+
+    .points-display {
+      font-weight: 600;
+      font-size: 1rem;
+      color: #333;
+    }
 
     .profile-wrapper {
       cursor: pointer;
       position: relative;
 
-      .profile-img {
+      .profile-letter {
         width: 36px;
         height: 36px;
         border-radius: 50%;
-        object-fit: cover;
+        background-color: #1e1919;
+        color: white;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-weight: bold;
+        font-size: 1.25rem;
+        user-select: none;
         border: 2px solid #333;
       }
 
@@ -75,9 +98,10 @@
       font-size: 1rem;
     }
 
-    .profile-img {
+    .profile-letter {
       width: 32px;
       height: 32px;
+      font-size: 1rem;
     }
   }
 }

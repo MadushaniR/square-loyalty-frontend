@@ -5,17 +5,18 @@ import App from '../App';
 const Dashboard = lazy(() => import('../pages/home/home'));
 const Login = lazy(() => import('../pages/auth/login/login'));
 const Register = lazy(() => import('../pages/auth/register/register'));
-// const Profile = lazy(() => import('./pages/Profile'));
-// const Settings = lazy(() => import('./pages/Settings'));
+const History = lazy(() => import('../pages/history/history'));
+const Points = lazy(() => import('../pages/points/points'));
+
 
 const router = createBrowserRouter([
   {
     path: '/',
     element: <App />,
-    children: [
+     children: [
       { path: '', element: <Suspense fallback={<div>Loading...</div>}><Dashboard /></Suspense> },
-    //   { path: 'profile', element: <Suspense fallback={<div>Loading...</div>}><Profile /></Suspense> },
-    //   { path: 'settings', element: <Suspense fallback={<div>Loading...</div>}><Settings /></Suspense> },
+      { path: 'history', element: <Suspense fallback={<div>Loading...</div>}><History /></Suspense> },
+      { path: 'points', element: <Suspense fallback={<div>Loading...</div>}><Points /></Suspense> },
     ],
   }, {
     path: '/login',
