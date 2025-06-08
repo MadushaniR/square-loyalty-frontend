@@ -9,29 +9,33 @@ const History = () => {
   const totalPoints = context?.totalPoints || 0;
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', headerName: 'ID', width: 70 },
+    { field: 'type', headerName: 'Type', width: 120 },
     { field: 'name', headerName: 'Item', width: 150 },
-    { field: 'price', headerName: 'Price (Rs)', width: 150 },
-    { field: 'points', headerName: 'Points Earned', width: 180 },
-    { field: 'time', headerName: 'Time', width: 180 },
+    { field: 'price', headerName: 'Price (Rs)', width: 130 },
+    { field: 'points', headerName: 'Points Earned', width: 150 },
+    { field: 'redeemedPoints', headerName: 'Points Redeemed', width: 160 },
+    { field: 'time', headerName: 'Time', width: 200 },
   ];
 
   const rows = purchaseHistory.map((item, idx) => ({
     id: idx + 1,
+    type: item.redeemedPoints ? 'Redeem' : 'Purchase',
     name: item.name,
-    price: item.price.toFixed(2),
-    points: item.points,
+    price: item.redeemedPoints ? '-' : item.price.toFixed(2),
+    points: item.points || 0,
+    redeemedPoints: item.redeemedPoints || 0,
     time: item.time,
   }));
 
   return (
     <div className="history-page">
-      <h2>Purchase History</h2>
-      {purchaseHistory.length === 0 ? (
-        <p>No purchases yet.</p>
+      <h2>Transaction History</h2>
+      {rows.length === 0 ? (
+        <p>No transactions yet.</p>
       ) : (
         <>
-          <Box sx={{ height: 400, width: '100%' }}>
+          <Box sx={{ height: 500, width: '100%' }}>
             <DataGrid
               rows={rows}
               columns={columns}
@@ -50,7 +54,7 @@ const History = () => {
             />
           </Box>
           <div className="total-points">
-            <strong>Total Points Earned:</strong> {totalPoints}
+            <strong>Total Points Available:</strong> {totalPoints}
           </div>
         </>
       )}

@@ -10,9 +10,12 @@ const items = [
   { name: 'Macchiato', image: 'src/assets/macchiato.png', price: 600, points: 60 },
 ];
 
+const MIN_REDEEM_POINTS = 200;
+
 const Home = () => {
   const {
     isSidebarOpen,
+    totalPoints,
     setTotalPoints,
     purchaseHistory,
     setPurchaseHistory
@@ -20,6 +23,7 @@ const Home = () => {
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [messagePopup, setMessagePopup] = useState(null);
+  const [redeemPopup, setRedeemPopup] = useState(false);
 
   const handleBuyClick = (item) => {
     setSelectedItem(item);
@@ -57,6 +61,42 @@ const Home = () => {
     }, 1000);
   };
 
+  const handleConfirmRedeem = () => {
+    if (!selectedItem) return;
+
+    const pointsToRedeem = selectedItem.price;
+
+    if (pointsToRedeem > totalPoints) {
+      setMessagePopup({
+        type: 'fail',
+        text: `You don't have enough points to redeem this item.`,
+      });
+      setRedeemPopup(false);
+      setSelectedItem(null);
+      return;
+    }
+
+    setTotalPoints((prev) => prev - pointsToRedeem);
+
+    const newEntry = {
+      name: selectedItem.name,
+      price: 0,
+      points: 0,
+      redeemedPoints: pointsToRedeem,
+      time: new Date().toLocaleString(),
+    };
+
+    setPurchaseHistory((prev) => [...prev, newEntry]);
+
+    setMessagePopup({
+      type: 'success',
+      text: `You have successfully redeemed ${pointsToRedeem} points for ${selectedItem.name}!`,
+    });
+
+    setRedeemPopup(false);
+    setSelectedItem(null);
+  };
+
   const closeMessagePopup = () => {
     setMessagePopup(null);
   };
@@ -74,23 +114,39 @@ const Home = () => {
       <div className="item-section">
         <h2>Discover Your Next Favorite Brew</h2>
         <div className={`item-grid ${isSidebarOpen ? 'sidebar-open' : 'sidebar-closed'}`}>
-          {items.map((item) => (
-            <div className="item-card" key={item.name}>
-              <img src={item.image} alt={item.name} />
-              <div className="item-info">
-                <h3>{item.name}</h3>
-                <p>Rs. {item.price.toFixed(2)}</p>
-                <span>Earn {item.points} points</span>
-                <button className="buy-button" onClick={() => handleBuyClick(item)}>
-                  Buy Now
-                </button>
+          {items.map((item) => {
+            const canRedeem = totalPoints >= item.price && item.price >= MIN_REDEEM_POINTS;
+            return (
+              <div className="item-card" key={item.name}>
+                <img src={item.image} alt={item.name} />
+                <div className="item-info">
+                  <h3>{item.name}</h3>
+                  <p>Rs. {item.price.toFixed(2)}</p>
+                  <span>Earn {item.points} points</span>
+
+                  <button className="buy-button" onClick={() => handleBuyClick(item)}>
+                    Buy Now
+                  </button>
+
+                  {canRedeem && (
+                    <button
+                      className="redeem-points-button"
+                      onClick={() => {
+                        setSelectedItem(item);
+                        setRedeemPopup(true);
+                      }}
+                    >
+                      Get Using Points
+                    </button>
+                  )}
+                </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
 
-      {selectedItem && (
+      {selectedItem && !redeemPopup && (
         <Popup
           title="Confirm Purchase"
           onClose={closePurchasePopup}
@@ -104,13 +160,28 @@ const Home = () => {
         </Popup>
       )}
 
+      {redeemPopup && selectedItem && (
+        <Popup
+          title="Redeem Points"
+          onClose={() => {
+            setRedeemPopup(false);
+            setSelectedItem(null);
+          }}
+          onConfirm={handleConfirmRedeem}
+          confirmText="Redeem"
+          cancelText="Cancel"
+        >
+          Redeem <strong>{selectedItem.name}</strong> for <strong>{selectedItem.price}</strong> points?
+        </Popup>
+      )}
+
       {messagePopup && (
         <Popup
-          title={messagePopup.type === 'success' ? 'Success!' : 'Failed'}
+          title={messagePopup.type === 'success' ? 'Success' : 'Error'}
           onClose={closeMessagePopup}
+          onConfirm={closeMessagePopup}
           confirmText="OK"
           cancelText={null}
-          onConfirm={closeMessagePopup}
         >
           {messagePopup.text}
         </Popup>

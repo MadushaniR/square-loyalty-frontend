@@ -14,7 +14,7 @@ const Sidebar = ({ isOpen, isMobile, onClose }) => {
   const menuItems = [
     { name: 'Home', path: '/', icon: <MdHome /> },
     { name: 'History', path: '/history', icon: <MdHistory /> },
-    { name: 'My Points', path: '/points', icon: <MdLoyalty /> }, // Add this route later if needed
+    { name: 'Help', path: '/help', icon: <MdLoyalty /> }, 
   ];
 
   const handleClick = (itemName, path) => {
