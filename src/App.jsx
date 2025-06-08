@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Outlet } from 'react-router-dom';
 import './App.css';
 import Header from './layouts/header/header';
 import Sidebar from './layouts/sidebar/sidebar';
@@ -26,7 +27,7 @@ function App() {
       <Sidebar isOpen={sidebarOpen} isMobile={isMobile} onClose={toggleSidebar} onItemClick={closeSidebar} />
       {sidebarOpen && isMobile && <div className="backdrop" onClick={closeSidebar} />}
       <main className={`main-content ${sidebarOpen && !isMobile ? 'with-sidebar' : ''}`}>
-        <p>hi</p>
+        <Outlet />
       </main>
     </>
   );

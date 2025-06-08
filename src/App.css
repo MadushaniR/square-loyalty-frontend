@@ -6,11 +6,18 @@ body {
 .main-content {
   padding: 1rem;
   transition: margin-left 0.3s ease;
-
-  &.with-sidebar {
-    margin-left: 250px;
-  }
+  background-color: rgb(249, 249, 249);
+  margin: 1rem;
+  height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border-radius: 10px;
 }
+
+.main-content.with-sidebar {
+  margin: 1rem;
+  margin-left: calc(250px + 1rem);
+}
+
 
 .backdrop {
   position: fixed;
