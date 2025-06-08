@@ -1,0 +1,25 @@
+.header {
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #33a0a3;
+  color: white;
+  padding: 0 1rem;
+  position: sticky;
+  top: 0;
+  z-index: 999;
+
+  .menu-btn {
+    font-size: 28px;
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+  }
+
+  .logo {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+}
