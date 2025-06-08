@@ -1,10 +1,30 @@
+import { useState } from 'react';
 import './header.scss';
 
 const Header = ({ toggleSidebar }) => {
+  const [showMenu, setShowMenu] = useState(false);
+
   return (
     <header className="header">
-      <button className="menu-btn" onClick={toggleSidebar}>☰</button>
-      <h1 className="logo">My App</h1>
+      <div className="left-section">
+        <button className="menu-btn" onClick={toggleSidebar}>☰</button>
+        <span className="logo">My App</span>
+      </div>
+
+      <div className="right-section">
+        <div className="profile-wrapper" onClick={() => setShowMenu(!showMenu)}>
+          <img
+            src="/profile.jpg" 
+            alt="Profile"
+            className="profile-img"
+          />
+          {showMenu && (
+            <div className="dropdown">
+              <div className="dropdown-item">Logout</div>
+            </div>
+          )}
+        </div>
+      </div>
     </header>
   );
 };
