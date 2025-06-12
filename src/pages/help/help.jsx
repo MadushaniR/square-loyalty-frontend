@@ -34,8 +34,6 @@ const Help = () => {
           Go to the <strong>History</strong> page in the sidebar to see your full purchase and redeem history, along with total points earned.
         </p>
       </section>
-
-    
     </div>
   );
 };

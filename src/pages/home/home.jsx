@@ -1,97 +1,141 @@
-import React, { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate, useOutletContext } from 'react-router-dom';
+import axios from 'axios';
 import Popup from '../../components/popup/popup';
 import './home.scss';
-import { useOutletContext } from 'react-router-dom';
+import latteImg from '../../assets/latte.png';
+import cappuccinoImg from '../../assets/cappachino.png';
+import espressoImg from '../../assets/expresso.png';
+import macchiatoImg from '../../assets/macchiato.png';
+import offerImg from '../../assets/offers.png';
 
 const items = [
-  { name: 'Latte', image: 'src/assets/latte.png', price: 600, points: 60 },
-  { name: 'Cappuccino', image: 'src/assets/cappachino.png', price: 500, points: 50 },
-  { name: 'Espresso', image: 'src/assets/expresso.png', price: 700, points: 70 },
-  { name: 'Macchiato', image: 'src/assets/macchiato.png', price: 600, points: 60 },
+  { name: 'Latte', image: latteImg, price: 600, points: 60 },
+  { name: 'Cappuccino', image: cappuccinoImg, price: 500, points: 50 },
+  { name: 'Espresso', image: espressoImg, price: 700, points: 70 },
+  { name: 'Macchiato', image: macchiatoImg, price: 600, points: 60 },
 ];
 
 const MIN_REDEEM_POINTS = 200;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 const Home = () => {
+  const navigate = useNavigate();
   const {
     isSidebarOpen,
     totalPoints,
     setTotalPoints,
     purchaseHistory,
-    setPurchaseHistory
+    setPurchaseHistory,
+    fetchBalance,
   } = useOutletContext();
 
   const [selectedItem, setSelectedItem] = useState(null);
   const [messagePopup, setMessagePopup] = useState(null);
   const [redeemPopup, setRedeemPopup] = useState(false);
 
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+    }
+  }, [token, navigate]);
+
+  const axiosConfig = {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${token}`,
+    },
+  };
+
   const handleBuyClick = (item) => {
     setSelectedItem(item);
   };
 
-  const handleConfirmPurchase = () => {
-    setTimeout(() => {
-      const success = Math.random() > 0.3;
+  const handleConfirmPurchase = async () => {
+    if (!selectedItem) return;
 
-      if (success) {
-        const newEntry = {
-          name: selectedItem.name,
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/earn`,
+        {
+          itemName: selectedItem.name,
           price: selectedItem.price,
           points: selectedItem.points,
-          time: new Date().toLocaleString(),
-        };
+        },
+        axiosConfig
+      );
 
-        setMessagePopup({
-          type: 'success',
-          text: `You successfully purchased ${selectedItem.name} for Rs. ${selectedItem.price.toFixed(
-            2
-          )}! You earned ${selectedItem.points} points.`,
-        });
+      const newEntry = {
+        name: selectedItem.name,
+        price: selectedItem.price,
+        points: selectedItem.points,
+        time: new Date().toLocaleString(),
+      };
 
-        setTotalPoints((prev) => prev + selectedItem.points);
-        setPurchaseHistory((prev) => [...prev, newEntry]);
-      } else {
-        setMessagePopup({
-          type: 'fail',
-          text: `Purchase failed for ${selectedItem.name}. Please try again later.`,
-        });
-      }
+      setMessagePopup({
+        type: 'success',
+        text: `You successfully purchased ${selectedItem.name} for Rs. ${selectedItem.price.toFixed(
+          2
+        )}! You earned ${selectedItem.points} points.`,
+      });
 
-      setSelectedItem(null);
-    }, 1000);
+      await fetchBalance();
+
+      setPurchaseHistory((prev) => [...prev, newEntry]);
+    } catch (error) {
+      setMessagePopup({
+        type: 'fail',
+        text:
+          error.response?.data?.error ||
+          `Purchase failed for ${selectedItem.name}. Error: ${error.message}`,
+      });
+    }
+
+    setSelectedItem(null);
   };
 
-  const handleConfirmRedeem = () => {
+  const handleConfirmRedeem = async () => {
     if (!selectedItem) return;
 
     const pointsToRedeem = selectedItem.price;
 
-    if (pointsToRedeem > totalPoints) {
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/redeem`,
+        {
+          itemName: selectedItem.name,
+          redeemPoints: pointsToRedeem,
+          currentPoints: totalPoints,
+        },
+        axiosConfig
+      );
+
+      await fetchBalance();
+
+      const newEntry = {
+        name: selectedItem.name,
+        price: 0,
+        points: 0,
+        redeemedPoints: pointsToRedeem,
+        time: new Date().toLocaleString(),
+      };
+
+      setPurchaseHistory((prev) => [...prev, newEntry]);
+
+      setMessagePopup({
+        type: 'success',
+        text: `You have successfully redeemed ${pointsToRedeem} points for ${selectedItem.name}!`,
+      });
+    } catch (error) {
       setMessagePopup({
         type: 'fail',
-        text: `You don't have enough points to redeem this item.`,
+        text:
+          error.response?.data?.error ||
+          `Redemption failed. Error: ${error.message}`,
       });
-      setRedeemPopup(false);
-      setSelectedItem(null);
-      return;
     }
-
-    setTotalPoints((prev) => prev - pointsToRedeem);
-
-    const newEntry = {
-      name: selectedItem.name,
-      price: 0,
-      points: 0,
-      redeemedPoints: pointsToRedeem,
-      time: new Date().toLocaleString(),
-    };
-
-    setPurchaseHistory((prev) => [...prev, newEntry]);
-
-    setMessagePopup({
-      type: 'success',
-      text: `You have successfully redeemed ${pointsToRedeem} points for ${selectedItem.name}!`,
-    });
 
     setRedeemPopup(false);
     setSelectedItem(null);
@@ -108,7 +152,7 @@ const Home = () => {
   return (
     <div className="home-page">
       <div className="banner">
-        <img src="src/assets/offers.png" alt="Loyalty Offer" />
+        <img src={offerImg} alt="Loyalty Offer" />
       </div>
 
       <div className="item-section">

@@ -1,12 +1,49 @@
-import { useOutletContext } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 import { DataGrid } from '@mui/x-data-grid';
 import { Box } from '@mui/material';
 import './history.scss';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+
 const History = () => {
-  const context = useOutletContext();
-  const purchaseHistory = context?.purchaseHistory || [];
-  const totalPoints = context?.totalPoints || 0;
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const token = localStorage.getItem('token');
+
+  useEffect(() => {
+    if (!token) {
+      navigate('/login');
+      return;
+    }
+
+    const fetchHistory = async () => {
+      try {
+        const config = {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        };
+
+        const [resHistory, resBalance] = await Promise.all([
+          axios.get(`${API_BASE_URL}/history`, config),
+          axios.get(`${API_BASE_URL}/balance`, config),
+        ]);
+
+        setPurchaseHistory(resHistory.data.history || []);
+        setTotalPoints(resBalance.data.balance || 0);
+      } catch (err) {
+        console.error('Failed to fetch history:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHistory();
+  }, [token, navigate]);
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 70 },
@@ -20,13 +57,15 @@ const History = () => {
 
   const rows = purchaseHistory.map((item, idx) => ({
     id: idx + 1,
-    type: item.redeemedPoints ? 'Redeem' : 'Purchase',
+    type: item.type,
     name: item.name,
-    price: item.redeemedPoints ? '-' : item.price.toFixed(2),
+    price: item.redeemedPoints ? '-' : item.price?.toFixed(2),
     points: item.points || 0,
     redeemedPoints: item.redeemedPoints || 0,
     time: item.time,
   }));
+
+  if (loading) return <p>Loading transaction history...</p>;
 
   return (
     <div className="history-page">
@@ -53,7 +92,7 @@ const History = () => {
               }}
             />
           </Box>
-          <div className="total-points">
+          <div className="total-points" style={{ marginTop: 16 }}>
             <strong>Total Points Available:</strong> {totalPoints}
           </div>
         </>
