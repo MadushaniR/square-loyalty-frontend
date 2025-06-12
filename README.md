@@ -25,3 +25,9 @@ echo "VITE_API_BASE_URL=http://localhost:8080/api" > .env
 # 4. Run the app
 npm run dev
 
+## 5. Note
+Login Credentials
+Use the following credentials to log in to the application.
+
+email = user@gmail.com
+password = 123456
