@@ -1,21 +1,25 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-  MdHome,
-  MdHistory,
-  MdLoyalty,
-} from 'react-icons/md';
+import { useEffect, useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import { MdHome, MdHistory, MdLoyalty } from 'react-icons/md';
 import './sidebar.scss';
 
 const Sidebar = ({ isOpen, isMobile, onClose }) => {
-  const [activeItem, setActiveItem] = useState('Home');
   const navigate = useNavigate();
+  const location = useLocation();
+  const [activeItem, setActiveItem] = useState('');
 
   const menuItems = [
-    { name: 'Home', path: '/', icon: <MdHome /> },
-    { name: 'History', path: '/history', icon: <MdHistory /> },
-    { name: 'Help', path: '/help', icon: <MdLoyalty /> }, 
+    { name: 'Home', path: '/app/dashboard', icon: <MdHome /> },
+    { name: 'History', path: '/app/history', icon: <MdHistory /> },
+    { name: 'Help', path: '/app/help', icon: <MdLoyalty /> },
   ];
+
+  useEffect(() => {
+    const currentItem = menuItems.find(item => location.pathname.startsWith(item.path));
+    if (currentItem) {
+      setActiveItem(currentItem.name);
+    }
+  }, [location.pathname]);
 
   const handleClick = (itemName, path) => {
     setActiveItem(itemName);

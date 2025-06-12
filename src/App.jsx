@@ -1,25 +1,15 @@
-import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useState } from 'react';
 import './App.css';
 import Header from './layouts/header/header';
 import Sidebar from './layouts/sidebar/sidebar';
+import useWindowSize from './hooks/useWindowSize';
+import usePoints from './hooks/usePoints';
 
 function App() {
-  const [isMobile, setIsMobile] = useState(window.innerWidth <= 768);
-  const [sidebarOpen, setSidebarOpen] = useState(window.innerWidth > 768);
-
-  const [totalPoints, setTotalPoints] = useState(0);
-  const [purchaseHistory, setPurchaseHistory] = useState([]);
-
-  useEffect(() => {
-    const handleResize = () => {
-      const mobile = window.innerWidth <= 768;
-      setIsMobile(mobile);
-      setSidebarOpen(!mobile);
-    };
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
+  const isMobile = useWindowSize();
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
+  const { totalPoints, setTotalPoints, fetchBalance } = usePoints();
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
   const closeSidebar = () => isMobile && setSidebarOpen(false);
@@ -35,15 +25,7 @@ function App() {
       />
       {sidebarOpen && isMobile && <div className="backdrop" onClick={closeSidebar} />}
       <main className={`main-content ${sidebarOpen && !isMobile ? 'with-sidebar' : ''}`}>
-        <Outlet
-          context={{
-            isSidebarOpen: sidebarOpen,
-            setTotalPoints,
-            totalPoints, 
-            purchaseHistory, 
-            setPurchaseHistory, 
-          }}
-        />
+        <Outlet context={{ sidebarOpen, totalPoints, setTotalPoints, fetchBalance }} />
       </main>
     </>
   );

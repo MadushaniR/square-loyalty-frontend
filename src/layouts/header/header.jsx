@@ -1,8 +1,15 @@
 import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import './header.scss';
 
 const Header = ({ toggleSidebar, totalPoints }) => {
   const [showMenu, setShowMenu] = useState(false);
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/login');
+  };
 
   useEffect(() => {
     console.log('Header totalPoints:', totalPoints);
@@ -24,7 +31,7 @@ const Header = ({ toggleSidebar, totalPoints }) => {
           <div className="profile-letter">A</div>
           {showMenu && (
             <div className="dropdown">
-              <div className="dropdown-item">Logout</div>
+              <div className="dropdown-item" onClick={handleLogout}>Logout</div>
             </div>
           )}
         </div>
