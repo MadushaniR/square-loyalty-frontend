@@ -10,6 +10,7 @@ function App() {
   const isMobile = useWindowSize();
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile);
   const { totalPoints, setTotalPoints, fetchBalance } = usePoints();
+  const [purchaseHistory, setPurchaseHistory] = useState([]);
 
   const toggleSidebar = () => setSidebarOpen(prev => !prev);
   const closeSidebar = () => isMobile && setSidebarOpen(false);
@@ -25,7 +26,14 @@ function App() {
       />
       {sidebarOpen && isMobile && <div className="backdrop" onClick={closeSidebar} />}
       <main className={`main-content ${sidebarOpen && !isMobile ? 'with-sidebar' : ''}`}>
-        <Outlet context={{ sidebarOpen, totalPoints, setTotalPoints, fetchBalance }} />
+        <Outlet context={{
+          isSidebarOpen: sidebarOpen,
+          totalPoints,
+          setTotalPoints,
+          fetchBalance,
+          purchaseHistory,
+          setPurchaseHistory, 
+        }} />
       </main>
     </>
   );

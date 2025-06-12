@@ -85,6 +85,7 @@ const Home = () => {
 
       setPurchaseHistory((prev) => [...prev, newEntry]);
     } catch (error) {
+      console.log('Purchase error:', error);
       setMessagePopup({
         type: 'fail',
         text:
